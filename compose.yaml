@@ -1,0 +1,51 @@
+services:
+  agent:
+    build:
+      dockerfile_inline: |
+        FROM nvidia/cuda:12.9.1-cudnn-runtime-ubuntu24.04
+        COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+        ENV \
+          HTTP_TIMEOUT="1000" \
+          UV_NO_CACHE="True"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    command: sleep infinity
+    volumes:
+      - ./:/agent:r
+
+  # mongo1:
+  #   image: mongo:latest
+  #   command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27017"]
+  #   ports:
+  #     - 27017:27017
+  #   extra_hosts:
+  #     - "host.docker.internal:host-gateway"
+  #   healthcheck:
+  #     test: echo "try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'mongo1:27017'}]}) }" | mongosh --port 27017 --quiet
+  #     # docker compose exec mongo1 mongosh --port 27017 --eval "rs.conf()"
+  #     # docker compose exec mongo1 mongosh --port 27017 --eval "rs.initiate({_id:'rs0',members:[{_id:0,host:'mongo1:27017'}]})"
+  #     # 'mongosh --quiet --port 27017 --eval "db.runCommand({ ping: 1 }).ok" | grep 1'
+  #     interval: 5s
+  #     timeout: 30s
+  #     start_period: 0s
+  #     start_interval: 1s
+  #     retries: 30
+
+  
+  mongo2:
+    image: mongodb/mongodb-atlas-local
+    hostname: mongo2
+    environment:
+      DO_NOT_TRACK: 1
+    ports:
+      - 27018:27017
+    volumes:
+      - /data/db
+      - /data/configdb

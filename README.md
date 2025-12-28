@@ -96,49 +96,7 @@ This will:
 
 **Important**: Only create these indexes AFTER running ingestion - you need data in your `chunks` collection first.
 
-In MongoDB Atlas, go to **Database** → **Search and Vector Search** → **Create Search Index**
-
-**1. Vector Search Index**
-- Pick: **"Vector Search"**
-- Database: `rag_db`
-- Collection: `chunks`
-- Index name: `vector_index`
-- JSON:
-```json
-{
-  "fields": [
-    {
-      "type": "vector",
-      "path": "embedding",
-      "numDimensions": 1536,
-      "similarity": "cosine"
-    }
-  ]
-}
-```
-
-**2. Atlas Search Index**
-- Click **"Create Search Index"** again
-- Pick: **"Atlas Search"**
-- Database: `rag_db`
-- Collection: `chunks`
-- Index name: `text_index`
-- JSON:
-```json
-{
-  "mappings": {
-    "dynamic": false,
-    "fields": {
-      "content": {
-        "type": "string",
-        "analyzer": "lucene.standard"
-      }
-    }
-  }
-}
-```
-
-Wait 1-5 minutes for both indexes to build (status: "Building" → "Active").
+Use `db-init.py`
 
 ### 8. Run the Agent
 

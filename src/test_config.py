@@ -7,9 +7,7 @@ from src.providers import get_model_info
 
 def mask_credential(value: str) -> str:
     """Mask credentials for safe display."""
-    if not value or len(value) < 8:
-        return "***"
-    return value[:4] + "..." + value[-4:]
+    return value
 
 
 def validate_config() -> bool:

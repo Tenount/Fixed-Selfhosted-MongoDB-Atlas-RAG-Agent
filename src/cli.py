@@ -3,6 +3,7 @@
 
 import asyncio
 from typing import List
+from collections import deque
 
 from rich.console import Console
 from rich.panel import Panel
@@ -190,7 +191,7 @@ async def main():
     console.print("[bold green]✓[/bold green] Search system initialized\n")
 
     # Initialize message history with proper Pydantic AI message objects
-    message_history = []
+    message_history = deque(maxlen=20)
 
     try:
         while True:

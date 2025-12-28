@@ -53,7 +53,7 @@ class EmbeddingGenerator:
 
         self.config = self.model_configs.get(
             model,
-            {"dimensions": 1536, "max_tokens": 8191}
+            {"dimensions": 1024, "max_tokens": 8191}  # qwen
         )
 
     async def generate_embedding(self, text: str) -> List[float]:

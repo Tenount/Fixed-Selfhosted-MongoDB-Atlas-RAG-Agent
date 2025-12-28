@@ -1,0 +1,106 @@
+2025-12-15 23:02:05,253 - src.ingestion.embedder - INFO - Processed batch 5387/5387
+2025-12-15 23:02:05,253 - src.ingestion.embedder - INFO - Generated embeddings for 538636 chunks
+2025-12-15 23:02:05,253 - __main__ - INFO - Generated embeddings for 538636 chunks
+2025-12-15 23:02:12,639 - __main__ - ERROR - Failed to process docs/verybig.txt: BSON document too large (499437512 bytes) - the connected server supports BSON document sizes up to 16793598 bytes.
+Traceback (most recent call last):
+  File "/agent/src/ingestion/ingest.py", line 566, in ingest_documents
+    result = await self._ingest_single_document(file_path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/agent/src/ingestion/ingest.py", line 504, in _ingest_single_document
+    document_id = await self._save_to_mongodb(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/agent/src/ingestion/ingest.py", line 407, in _save_to_mongodb
+    document_result = await documents_collection.insert_one(document_dict)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/agent/.venv/lib/python3.14/site-packages/pymongo/asynchronous/collection.py", line 892, in insert_one
+    await self._insert_one(
+    ^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    ),
+    ^
+  File "/agent/.venv/lib/python3.14/site-packages/pymongo/asynchronous/collection.py", line 832, in _insert_one
+    await self._database.client._retryable_write(
+        acknowledged, _insert_command, session, operation=_Op.INSERT
+    )
+  File "/agent/.venv/lib/python3.14/site-packages/pymongo/asynchronous/mongo_client.py", line 2086, in _retryable_write
+    return await self._retry_with_session(retryable, func, s, bulk, operation, operation_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/agent/.venv/lib/python3.14/site-packages/pymongo/asynchronous/mongo_client.py", line 1972, in _retry_with_session
+    return await self._retry_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "/agent/.venv/lib/python3.14/site-packages/pymongo/_csot.py", line 115, in csot_wrapper
+    return await func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/agent/.venv/lib/python3.14/site-packages/pymongo/asynchronous/mongo_client.py", line 2007, in _retry_internal
+    return await _ClientConnectionRetryable(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<10 lines>...
+    ).run()
+    ^^^^^^^
+  File "/agent/.venv/lib/python3.14/site-packages/pymongo/asynchronous/mongo_client.py", line 2775, in run
+    return await self._read() if self._is_read else await self._write()
+                                                    ^^^^^^^^^^^^^^^^^^^
+  File "/agent/.venv/lib/python3.14/site-packages/pymongo/asynchronous/mongo_client.py", line 2907, in _write
+    return await self._func(self._session, conn, self._retryable)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/agent/.venv/lib/python3.14/site-packages/pymongo/asynchronous/collection.py", line 820, in _insert_command
+    result = await conn.command(
+             ^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "/agent/.venv/lib/python3.14/site-packages/pymongo/asynchronous/helpers.py", line 47, in inner
+    return await func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/agent/.venv/lib/python3.14/site-packages/pymongo/asynchronous/pool.py", line 441, in command
+    await self._raise_connection_failure(error)
+  File "/agent/.venv/lib/python3.14/site-packages/pymongo/asynchronous/pool.py", line 413, in command
+    return await command(
+           ^^^^^^^^^^^^^^
+    ...<22 lines>...
+    )
+    ^
+  File "/agent/.venv/lib/python3.14/site-packages/pymongo/asynchronous/network.py", line 161, in command
+    message._raise_document_too_large(name, size, max_bson_size + message._COMMAND_OVERHEAD)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/agent/.venv/lib/python3.14/site-packages/pymongo/message.py", line 750, in _raise_document_too_large
+    raise DocumentTooLarge(
+    ...<4 lines>...
+    )
+pymongo.errors.DocumentTooLarge: BSON document too large (499437512 bytes) - the connected server supports BSON document sizes up to 16793598 bytes.
+2025-12-15 23:02:12,663 - __main__ - INFO - Ingestion complete: 1 documents, 0 chunks, 1 errors
+
+==================================================
+INGESTION SUMMARY
+==================================================
+Documents processed: 1
+Total chunks created: 0
+Total errors: 1
+Total processing time: 6337.69 seconds
+
+[FAILED] verybig.txt: 0 chunks
+  Error: BSON document too large (499437512 bytes) - the connected server supports BSON document sizes up to 16793598 bytes.
+
+
+
+
+
+
+
+
+
+# create collections first
+
+
+pymongo.errors.OperationFailure: Error retrieving collection UUID and view info :: caused by :: Collection 'rag_db.chunks' does not exist., full error: {'ok': 0.0, 'errmsg': "Error retrieving collection UUID and view info :: caused by :: Collection 'rag_db.chunks' does not exist.", 'code': 26, 'codeName': 'NamespaceNotFound', '$clusterTime': {'clusterTime': Timestamp(1765840196, 1), 'signature': {'hash': b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00', 'keyId': 0}}, 'operationTime': Timestamp(1765840196, 1)}
+
+
+
+
+

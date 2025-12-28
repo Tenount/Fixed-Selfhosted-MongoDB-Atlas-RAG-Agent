@@ -118,7 +118,7 @@ class DocumentIngestionPipeline:
             )
 
         except (ConnectionFailure, ServerSelectionTimeoutError) as e:
-            logger.exception("mongodb_connection_failed", error=str(e))
+            logger.exception("mongodb_connection_failed", exc_info=True)
             raise
 
         self._initialized = True
@@ -146,6 +146,7 @@ class DocumentIngestionPipeline:
 
         # Supported file patterns - Docling + text formats + audio
         patterns = [
+            '*.xml',
             "*.md", "*.markdown", "*.txt",  # Text formats
             "*.pdf",  # PDF
             "*.docx", "*.doc",  # Word
@@ -187,6 +188,7 @@ class DocumentIngestionPipeline:
 
         # Docling-supported formats (convert to markdown)
         docling_formats = [
+            '.xml',
             '.pdf', '.docx', '.doc', '.pptx', '.ppt',
             '.xlsx', '.xls', '.html', '.htm',
             '.md', '.markdown'  # Markdown files for HybridChunker
